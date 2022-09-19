@@ -1,18 +1,16 @@
-require './player.rb'
-
 class Game
   def initialize
     @p1 = Player.new("Player 1")
     @p2 = Player.new("Player 2")
-    @players = [@p1, @p2]
+    @players = [@p1,@p2]
   end
 
   def question
     num1 = rand(1..20)
     num2 = rand(1..20)
-    @questioner = @players.first.name
-    @answerer = @players.last
     @total = num1 + num2
+    @questioner = @players.first.name
+    @current_player = @players.last
     puts "#{@questioner}: What does #{num1} plus #{num2} equal?"
   end
 
@@ -22,7 +20,7 @@ class Game
       puts "#{@questioner}: YES! You are correct."
     else
       puts "#{@questioner}: Seriously? No!"
-      @answerer.lose_life
+      @current_player.lose_life
     end
   end
 
@@ -30,13 +28,20 @@ class Game
     puts "P1: #{@p1.lives}/3 vs P2: #{@p2.lives}/3 "
   end
 
-  def game_over?
-    puts "----- GAME OVER -----"
-  end
-
   def result
     @p2.loser? ? winner = @p1 : winner = @p2
     puts "#{winner.name} wins with a score of #{winner.lives}/3"
+  end
+
+  def game_over?
+    puts "----- GAME OVER -----"
+    puts "Good bye!"
+  end
+
+  def new_turn
+    puts "----- NEW TURN -----"
+    @players.reverse!
+    return
   end
 
   def play
@@ -44,6 +49,10 @@ class Game
       puts self.question
       puts self.answer
       puts self.score
+      puts self.new_turn
+    end
+      puts self.result
+      puts self.game_over?
   end
 
 end
